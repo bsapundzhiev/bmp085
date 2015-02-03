@@ -30,9 +30,6 @@ static const unsigned short normal_i2c[] = { BMP085_I2C_ADDRESS,
 static int bmp085_i2c_detect(struct i2c_client *client,
 			     struct i2c_board_info *info)
 {
-
-	printk("bmp085_i2c_detect 0x%x\n", client->addr);
-
 	if (client->addr != BMP085_I2C_ADDRESS)
 		return -ENODEV;
 
@@ -45,14 +42,14 @@ static int bmp085_i2c_probe(struct i2c_client *client,
 	int err;
 	struct regmap *regmap = devm_regmap_init_i2c(client,
 						     &bmp085_regmap_config);
-	printk("bmp085_i2c_probe %p\n", regmap);
+
 	if (IS_ERR(regmap)) {
 		err = PTR_ERR(regmap);
 		dev_err(&client->dev, "Failed to init regmap: %d\n", err);
 		return err;
 	}
 
-	return bmp085_probe(&client->dev, regmap);
+	return bmp085_probe(&client->dev, regmap, client->irq);
 }
 
 static int bmp085_i2c_remove(struct i2c_client *client)
@@ -62,13 +59,12 @@ static int bmp085_i2c_remove(struct i2c_client *client)
 
 static const struct i2c_device_id bmp085_id[] = {
 	{ BMP085_NAME, 0 },
-	{ "bmp180", 1 },
+	{ "bmp180", 0 },
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, bmp085_id);
 
 static struct i2c_driver bmp085_i2c_driver = {
-	.class = I2C_CLASS_HWMON,
 	.driver = {
 		.owner	= THIS_MODULE,
 		.name	= BMP085_NAME,

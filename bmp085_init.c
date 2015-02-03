@@ -23,6 +23,9 @@ static struct i2c_board_info bmp085_i2c_info[] = {
 static int __init bmp085_i2c_init(void)
 {
 	int nr;
+
+	printk(KERN_ALERT "%s probing bus max %d\n",__FUNCTION__, I2C_BUS_MAX);
+
 	for(nr =0; nr < I2C_BUS_MAX; nr++) {
 	
 		struct i2c_adapter * adap = i2c_get_adapter(nr);
@@ -38,7 +41,7 @@ static int __init bmp085_i2c_init(void)
 
 static void __exit bmp085_i2c_exit(void)
 {
-	printk(KERN_ALERT "[%s] Exit\n", "bmp085_init");
+	printk(KERN_ALERT "%s\n", __FUNCTION__);
 }
 
 module_init(bmp085_i2c_init);
