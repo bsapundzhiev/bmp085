@@ -17,10 +17,10 @@
 
 static struct i2c_board_info bmp085_i2c_info[] = {
 		
-	{I2C_BOARD_INFO("bmp085", 0x77),}
+	{ I2C_BOARD_INFO("bmp085", 0x77), }
 };
 
-static int __init bmp085_i2c_init(void)
+static int __init bmp085_probe_init(void)
 {
 	int nr;
 
@@ -39,13 +39,13 @@ static int __init bmp085_i2c_init(void)
 	return 0;
 }
 
-static void __exit bmp085_i2c_exit(void)
+static void __exit bmp085_probe_exit(void)
 {
 	printk(KERN_ALERT "%s\n", __FUNCTION__);
 }
 
-module_init(bmp085_i2c_init);
-module_exit(bmp085_i2c_exit);
+module_init(bmp085_probe_init);
+module_exit(bmp085_probe_exit);
 
 MODULE_AUTHOR("Borislav Sapundzhiev <BSapundzhiev@gmail.com>");
 MODULE_DESCRIPTION("bmp085/18x init");

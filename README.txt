@@ -23,7 +23,7 @@ $ sudo nano /etc/modules
 Add lines follow
 bmp085
 bmp085-i2c
-bmp085_init
+bmp085-probe
 
 *Test:
 -------
