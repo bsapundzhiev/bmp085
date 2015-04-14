@@ -15,8 +15,11 @@
 
 #define	I2C_BUS_MAX	4
 
+/* device probing addreses */
+static const unsigned short probe_i2c_addrs[] = I2C_ADDRS(0x76, 0x77);
+
 static struct i2c_board_info bmp085_i2c_info[] = {
-		
+
 	{ I2C_BOARD_INFO("bmp085", 0x77), }
 };
 
@@ -27,12 +30,10 @@ static int __init bmp085_probe_init(void)
 	printk(KERN_ALERT "%s probing bus max %d\n",__FUNCTION__, I2C_BUS_MAX);
 
 	for(nr =0; nr < I2C_BUS_MAX; nr++) {
-	
+
 		struct i2c_adapter * adap = i2c_get_adapter(nr);
 		if(adap) {
-			//i2c_new_device(adap, bmp085_i2c_info);
-			i2c_new_probed_device(adap, bmp085_i2c_info, 
-						I2C_ADDRS(0x77), NULL);
+			i2c_new_probed_device(adap, bmp085_i2c_info, probe_i2c_addrs, NULL);
 		}
 	}
 
