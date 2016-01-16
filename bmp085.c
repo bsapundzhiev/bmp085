@@ -364,11 +364,33 @@ static ssize_t show_pressure(struct device *dev,
 }
 static DEVICE_ATTR(pressure0_input, S_IRUGO, show_pressure, NULL);
 
+static ssize_t show_altitude(struct device *dev,
+				struct device_attribute *attr, char *buf)
+{
+   	int pressure;
+	int status;
+	int moo, moo2, altitude;
+	struct bmp085_data *data = dev_get_drvdata(dev);
+
+	status = bmp085_get_pressure(data, &pressure);
+	if (status < 0)
+		return status;
+
+	moo = (int)95000 - pressure;
+	moo2 = moo * moo;
+	altitude = 540418;
+	altitude += (((int)22455 * moo) >> 8); 
+	altitude += (moo2 >> 12) + (moo2 >> 13) + (moo2 >> 17); 
+
+  	return sprintf(buf, "%d\n", altitude);
+}
+static DEVICE_ATTR(altitude0_input, S_IRUGO, show_altitude, NULL);
 
 static struct attribute *bmp085_attributes[] = {
 	&dev_attr_temp0_input.attr,
 	&dev_attr_pressure0_input.attr,
 	&dev_attr_oversampling.attr,
+	&dev_attr_altitude0_input.attr,
 	NULL
 };
 
